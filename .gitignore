@@ -1,0 +1,8 @@
+Doxyfile
+doxygen
+*.o
+*.exe
+*.save
+*.bat
+latex
+.vscode
