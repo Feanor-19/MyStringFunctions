@@ -72,6 +72,48 @@ char * my_strchr( char * s, int symbol)
     }
 }
 
+const char * my_strrchr(const char * s, int symbol)
+{
+    assert(s != NULL);
+
+    const char *result = NULL;
+    while ( *s != '\0' )
+    {
+        if ( *s == (char) symbol ) result = s;
+        s++;
+    }
+
+    if (symbol == '\0')
+    {
+        return s;
+    }
+    else
+    {
+        return result;
+    }
+}
+
+char * my_strrchr(char * s, int symbol)
+{
+    assert(s != NULL);
+
+    char *result = NULL;
+    while ( *s != '\0' )
+    {
+        if ( *s == (char) symbol ) result = s;
+        s++;
+    }
+
+    if (symbol == '\0')
+    {
+        return s;
+    }
+    else
+    {
+        return result;
+    }
+}
+
 char * my_strcpy( char * destptr, const char * srcptr )
 {
     assert(destptr != NULL);
@@ -329,6 +371,7 @@ const char * my_strstr( const char * str, const char * sub_str )
     @param [in/out] is_symb_in_substr[] Array, which index is symbol and value by index is 1 or 0,
     dependig whether this symbol is presented in string or not. Array must be initialized with zeroes.
 */
+/*
 static void symbols_in_str( int arrSize, int is_symb_in_substr[], const char* str )
 {
     while (*str != '\0')
@@ -337,34 +380,48 @@ static void symbols_in_str( int arrSize, int is_symb_in_substr[], const char* st
         str++;
     }
 }
+*/
 
 const char * my_strstr2( const char * str, const char * sub_str )
 {
     assert(str != NULL);
     assert(sub_str != NULL);
 
+    const size_t NSYMBOLS = 256;
+
     size_t sub_str_len = my_strlen(sub_str);
     const char *str_end = my_strchr(str, '\0');
+
+    int prep_rfind[NSYMBOLS] = {0};
+
+    for (size_t c = 0; c < NSYMBOLS; c++)
+    {
+        const char *rchr = my_strrchr( sub_str, (int) c );
+        if (rchr != NULL) prep_rfind[ (size_t) c ] = sub_str + sub_str_len - rchr;
+    }
 
     while (*str != '\0')
     {
         //прыжок
         if ( (str + sub_str_len - 1) < str_end )
         {
-            for (size_t jmp_len = 0; jmp_len <= sub_str_len; jmp_len++)
-            {
-                size_t suffix_len = jmp_len + 1;
-                if ( *( sub_str + sub_str_len - suffix_len ) == *(str + sub_str_len - 1) )
-                {
-                    str += jmp_len;
-                    break;
-                }
-            }
+            assert( 0 <= *(str + sub_str_len - 1) && (size_t) *(str + sub_str_len - 1) < NSYMBOLS );
+
+            size_t suffix_len = prep_rfind[ (size_t) *(str + sub_str_len - 1) ];
+
+            size_t jmp_len = 0;
+
+            if (suffix_len == 0) jmp_len = sub_str_len;
+            else jmp_len = suffix_len - 1;
+
+            str += jmp_len;
         }
         else
         {
             return NULL;
         }
+
+        if ((str + sub_str_len - 1) >= str_end) return NULL;
 
         if ( my_strcmp( str, str + sub_str_len - 1, sub_str, sub_str + sub_str_len - 1 ) == 0 )
         {

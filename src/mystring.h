@@ -11,6 +11,10 @@ const char * my_strchr( const char * s, int symbol);
 
 char * my_strchr( char * s, int symbol);
 
+const char * my_strrchr(const char * s, int symbol);
+
+char * my_strrchr(char * s, int symbol);
+
 char * my_strcpy( char * destptr, const char * srcptr );
 
 char * my_strncpy( char * destptr, const char * srcptr, size_t num );
