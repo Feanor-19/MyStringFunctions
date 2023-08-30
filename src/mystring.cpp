@@ -271,3 +271,107 @@ size_t my_getline(char **lineptr, size_t *n, FILE *stream)
 
 }
 
+int my_strcmp( const char * str1, const char * str2 )
+{
+    assert(str1 != NULL);
+    assert(str2 != NULL);
+
+    while (*str1 != '\0' && *str2 != '\0' && *str1 == *str2)
+    {
+        str1++;
+        str2++;
+    }
+
+    return ( (*str1 > *str2) ? 1 : -( *str1 < *str2 ) );
+}
+
+int my_strcmp(const char *str1_begin, const char *str1_end, const char *str2_begin, const char *str2_end)
+{
+    assert(str1_begin != NULL);
+    assert(str1_end != NULL);
+    assert(str2_begin != NULL);
+    assert(str2_end != NULL);
+
+    const char *str1_p = str1_begin;
+    const char *str2_p = str2_begin;
+
+    while (str1_p != str1_end && str2_p != str2_end && *str1_p == *str2_p)
+    {
+        str1_p++;
+        str2_p++;
+    }
+
+    return ( (*str1_p > *str2_p) ? 1 : -( *str1_p < *str2_p ) );
+}
+
+const char * my_strstr( const char * str, const char * sub_str )
+{
+    assert(str != NULL);
+    assert(sub_str != NULL);
+
+    size_t sub_str_len = my_strlen(sub_str);
+
+    while (*str != '\0')
+    {
+        if ( my_strcmp( str, str + sub_str_len - 1, sub_str, sub_str + sub_str_len - 1 ) == 0 )
+        {
+            return str;
+        }
+        str++;
+    }
+
+    return NULL;
+}
+
+/*!
+    @brief Finds which symbols are presented in passe string.
+    @param [in] arrSize Size of is_symb_in_substr[].
+    @param [in/out] is_symb_in_substr[] Array, which index is symbol and value by index is 1 or 0,
+    dependig whether this symbol is presented in string or not. Array must be initialized with zeroes.
+*/
+static void symbols_in_str( int arrSize, int is_symb_in_substr[], const char* str )
+{
+    while (*str != '\0')
+    {
+        if ( *str < arrSize ) is_symb_in_substr[ (size_t) *str ]++;
+        str++;
+    }
+}
+
+const char * my_strstr2( const char * str, const char * sub_str )
+{
+    assert(str != NULL);
+    assert(sub_str != NULL);
+
+    size_t sub_str_len = my_strlen(sub_str);
+    const char *str_end = my_strchr(str, '\0');
+
+    while (*str != '\0')
+    {
+        //прыжок
+        if ( (str + sub_str_len - 1) < str_end )
+        {
+            for (size_t jmp_len = 0; jmp_len <= sub_str_len; jmp_len++)
+            {
+                size_t suffix_len = jmp_len + 1;
+                if ( *( sub_str + sub_str_len - suffix_len ) == *(str + sub_str_len - 1) )
+                {
+                    str += jmp_len;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            return NULL;
+        }
+
+        if ( my_strcmp( str, str + sub_str_len - 1, sub_str, sub_str + sub_str_len - 1 ) == 0 )
+        {
+            return str;
+        }
+        str++;
+    }
+
+    return NULL;
+}

@@ -6,12 +6,16 @@
 
 int main()
 {
-    size_t str_size = 4;
-    char *str = (char*) calloc(str_size, sizeof(char) );
 
-    size_t bytes = my_getline(&str, &str_size, stdin);
+    char str[100];
+    char sub_str[50];
 
-    printf("bytes = %d, str_size = %d, str = %s", bytes, str_size, str);
+    scanf("%s %s", str, sub_str);
+
+    const char *res = my_strstr2(str, sub_str);
+    if (res != NULL) printf("%s\n", res);
+    else printf("Substr not found!\n");
+
 
     return 0;
 }

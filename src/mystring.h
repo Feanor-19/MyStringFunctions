@@ -25,4 +25,12 @@ char *my_strdup(const char *s);
 
 size_t my_getline(char **lineptr, size_t *n, FILE *stream);
 
+int my_strcmp( const char * str1, const char * str2 );
+
+int my_strcmp( const char *str1_begin, const char *str1_end, const char *str2_begin, const char *str2_end );
+
+const char * my_strstr( const char * str, const char * sub_str );
+
+const char * my_strstr2( const char * str, const char * sub_str );
+
 #endif /* MYSTRING_H */
